@@ -1,0 +1,7 @@
+C:\Users\emanu\Source\Repos\CircuitCalcToolGUI\CircuitCalcToolGUI\CircuitCalcToolGUI\bin\Debug\CircuitCalcToolGUI.exe.config
+C:\Users\emanu\Source\Repos\CircuitCalcToolGUI\CircuitCalcToolGUI\CircuitCalcToolGUI\bin\Debug\CircuitCalcToolGUI.exe
+C:\Users\emanu\Source\Repos\CircuitCalcToolGUI\CircuitCalcToolGUI\CircuitCalcToolGUI\bin\Debug\CircuitCalcToolGUI.pdb
+C:\Users\emanu\Source\Repos\CircuitCalcToolGUI\CircuitCalcToolGUI\CircuitCalcToolGUI\obj\Debug\CircuitCalcToolGUI.csprojAssemblyReference.cache
+C:\Users\emanu\Source\Repos\CircuitCalcToolGUI\CircuitCalcToolGUI\CircuitCalcToolGUI\obj\Debug\CircuitCalcToolGUI.csproj.CoreCompileInputs.cache
+C:\Users\emanu\Source\Repos\CircuitCalcToolGUI\CircuitCalcToolGUI\CircuitCalcToolGUI\obj\Debug\CircuitCalcToolGUI.exe
+C:\Users\emanu\Source\Repos\CircuitCalcToolGUI\CircuitCalcToolGUI\CircuitCalcToolGUI\obj\Debug\CircuitCalcToolGUI.pdb
