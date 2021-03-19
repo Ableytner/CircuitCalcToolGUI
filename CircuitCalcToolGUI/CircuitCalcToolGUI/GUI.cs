@@ -14,48 +14,123 @@ namespace CircuitCalcToolGUI
             y = Y;
         }
 
-        public int x;
-        public int y;
+        public readonly int x;
+        public readonly int y;
+    }
+
+    class TextField
+    {
+        public TextField(Position pos, int width, string title = "", string cornTop = ".", string cornBot = "'", string borderVert = "|", string borderHori = "-")
+        {
+            this.pos = pos;
+            this.width = width;
+
+            text = StringBuilder.Border(new Position(width, 3), cornTop, cornBot, borderVert, borderHori);
+
+            if (!(title == "" || title == null))
+            {
+                text[1] = borderVert + title + ": ";
+                for (int c = 0; c < (width - title.Length - 4); c++)
+                {
+                    text[1] += " ";
+                }
+                text[1] += borderVert;
+            }
+
+            /*Console.WriteLine(text[0]);
+            Console.WriteLine(text[1]);
+            Console.WriteLine(text[2]);*/
+        }
+
+        public readonly Position pos;
+        public readonly int width;
+        public string[] text = new string[3];
+
     }
 
     class GUI
     {
+        private Position windowSize;
+        private string[] content = new string[30];
+        private List<TextField> textFields = new List<TextField>();
+
         private Position cursorPos = new Position(0, 0);
 
-        readonly string top;
-        readonly string secTop;
-        readonly string bottom;
-
-        public GUI()
+        public GUI(Position windowSize)
         {
-            Console.SetWindowSize(60, 30 + 1); // +1 for extra line below last line
+            SetWindowSize(windowSize);
 
-            top = ".----------------------------------------------------------.";
-            secTop = "|                                                          |";
-            bottom = "'----------------------------------------------------------'";
+            content = StringBuilder.Border(windowSize);
 
-            InitDraw();
+            AddTextField(new TextField(new Position(5, 5), 15, "Title", "+", "+"));
+            
+            MoveCursor(new Position(5, 5));
+        }
 
-            MoveCursor(new Position(1, 1));
-
+        #region Public
+        public void Main()
+        {
             GetUserInput();
         }
 
-        public void MoveCursor(Position pos)
+        public void AddTextField(TextField field)
+        {
+            textFields.Add(field);
+            ImportTextFields();
+            RedrawAll();
+        }
+        #endregion;
+
+        #region OneTime
+        private void SetWindowSize(Position windowSize)
+        {
+            Console.SetWindowSize(windowSize.x, windowSize.y);
+            this.windowSize = windowSize;
+            Array.Resize(ref content, windowSize.y);
+        }
+        #endregion
+
+        #region Helpers
+        private string ChangeChar(string s, int index, string newChar)
+        {
+            return s.Remove(index, 1).Insert(index, newChar);
+        }
+        #endregion
+
+        private void ImportTextFields()
+        {
+            int x = 0, y = 0;
+            foreach(var item in textFields)
+            {
+                for (int c = item.pos.y - 1; c < item.pos.y + 2; c++)
+                {
+                    for(int i = item.pos.x - 1; i < (item.pos.x - 1) + item.width; i++)
+                    {
+                        content[c] = ChangeChar(content[c], i, item.text[y][x].ToString());
+                        x++;
+                    }
+                    x = 0;
+                    y++;
+                }
+                y = 0;
+            }
+        }
+
+        private void RedrawAll()
+        {
+            Console.Clear();
+
+            for(int c = 0; c < windowSize.y - 1; c++)
+            {
+                Console.WriteLine(content[c]);
+            }
+            Console.Write(content[windowSize.y - 1]);
+        }
+
+        private void MoveCursor(Position pos)
         {
             Console.SetCursorPosition(pos.x, pos.y);
             cursorPos = pos;
-            //Console.Write(pos.x); Console.Write(pos.y);
-        }
-
-        private void InitDraw()
-        {
-            Console.WriteLine(top);
-            for(int c = 0; c < 28; c++)
-            {
-                Console.WriteLine(secTop);
-            }
-            Console.WriteLine(bottom);
         }
 
         private void GetUserInput()
@@ -69,31 +144,31 @@ namespace CircuitCalcToolGUI
                 switch (key.Key)
                 {
                     case ConsoleKey.Tab:
-                        stop = true;
+                        
                         break;
 
                     case ConsoleKey.Enter:
-                        throw new NotImplementedException();
+                        
                         break;
 
-                    case ConsoleKey.W:
-                        Position oldPos = cursorPos;
-                        MoveCursor(new Position(oldPos.x, oldPos.y - 1));
-                        //Console.Write("T");
+                    case ConsoleKey.UpArrow:
+
                         break;
 
-                    case ConsoleKey.D:
-                        oldPos = cursorPos;
-                        MoveCursor(new Position(oldPos.x + 1, oldPos.y));
+                    case ConsoleKey.DownArrow:
+
                         break;
 
-                    case ConsoleKey.A:
-                        oldPos = cursorPos;
-                        MoveCursor(new Position(oldPos.x - 1, oldPos.y));
+                    case ConsoleKey.RightArrow:
+
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+
                         break;
 
                     default:
-                        Console.WriteLine(key.KeyChar);
+                        
                         break;
                 }
             }
