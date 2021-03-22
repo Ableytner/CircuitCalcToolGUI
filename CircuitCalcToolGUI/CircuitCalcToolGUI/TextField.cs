@@ -48,9 +48,12 @@ namespace CircuitCalcToolGUI
 
         public void ChangeValue(char toChange, int index)
         {
-            value = ChangeChar(value, index, toChange.ToString());
-            Console.WriteLine(value + "!");
-            UpdateArr();
+            if(index < value.Length)
+            {
+                value = ChangeChar(value, index, toChange.ToString());
+                Console.WriteLine(value + "!");
+                UpdateArr();
+            }
         }
         public void ChangeValue(string toChange, int indexStart)
         {

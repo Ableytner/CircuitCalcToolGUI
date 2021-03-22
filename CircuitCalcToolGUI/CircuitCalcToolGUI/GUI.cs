@@ -40,8 +40,8 @@ namespace CircuitCalcToolGUI
         #region Public
         public void Main()
         {
-            textFields[0].ChangeValue("Test", 0);
-            textFields[1].ChangeValue("Test", 0);
+            textFields[0].ChangeValue("TestTe", 0);
+            textFields[1].ChangeValue("TestTestTe", 0);
 
             ImportTextFields();
             RedrawAll();
@@ -80,7 +80,7 @@ namespace CircuitCalcToolGUI
             {
                 for (int c = item.pos.y - 1; c < item.pos.y + 2; c++)
                 {
-                    for(int i = item.pos.x - 1; i < (item.pos.x - 1) + item.width; i++)
+                    for(int i = item.pos.x - 1; i < ((item.pos.x - 1) + item.width); i++)
                     {
                         content[c] = ChangeChar(content[c], i, item.text[y][x].ToString());
                         x++;
@@ -94,7 +94,7 @@ namespace CircuitCalcToolGUI
 
         private void RedrawAll()
         {
-            Console.Clear();
+            //Console.Clear();
 
             for(int c = 0; c < windowSize.y - 1; c++)
             {
