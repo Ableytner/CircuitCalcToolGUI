@@ -40,6 +40,12 @@ namespace CircuitCalcToolGUI
         #region Public
         public void Main()
         {
+            textFields[0].ChangeValue("Test", 0);
+            textFields[1].ChangeValue("Test", 0);
+
+            ImportTextFields();
+            RedrawAll();
+
             GetUserInput();
         }
 
