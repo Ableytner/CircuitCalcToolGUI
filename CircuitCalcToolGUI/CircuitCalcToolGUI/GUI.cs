@@ -25,6 +25,7 @@ namespace CircuitCalcToolGUI
         private List<TextField> textFields = new List<TextField>();
 
         private Position cursorPos = new Position(0, 0);
+        private int cursorElementPos = 0;
 
         public GUI(Position windowSize)
         {
@@ -94,7 +95,7 @@ namespace CircuitCalcToolGUI
 
         private void RedrawAll()
         {
-            //Console.Clear();
+            Console.Clear();
 
             for(int c = 0; c < windowSize.y - 1; c++)
             {
@@ -120,7 +121,15 @@ namespace CircuitCalcToolGUI
                 switch (key.Key)
                 {
                     case ConsoleKey.Tab:
-                        
+
+                        RedrawAll();
+
+                        cursorElementPos++;
+                        if (cursorElementPos >= textFields.Count)
+                            cursorElementPos = 0;
+
+                        Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
+                        MoveCursor(newPos);
                         break;
 
                     case ConsoleKey.Enter:

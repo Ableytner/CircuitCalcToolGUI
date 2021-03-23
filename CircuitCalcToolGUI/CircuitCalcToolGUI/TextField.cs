@@ -44,7 +44,7 @@ namespace CircuitCalcToolGUI
         public readonly int width;
         public string[] text = new string[3];
         public string value;
-        private int valuePos;
+        public int valuePos;
 
         public void ChangeValue(char toChange, int index)
         {
