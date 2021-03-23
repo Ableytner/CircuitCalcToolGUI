@@ -102,12 +102,26 @@ namespace CircuitCalcToolGUI
                 Console.WriteLine(content[c]);
             }
             Console.Write(content[windowSize.y - 1]);
+
+            MoveCursor(cursorPos);
         }
 
         private void MoveCursor(Position pos)
         {
             Console.SetCursorPosition(pos.x, pos.y);
             cursorPos = pos;
+        }
+
+        private void TabToNext()
+        {
+            RedrawAll();
+
+            cursorElementPos++;
+            if (cursorElementPos >= textFields.Count)
+                cursorElementPos = 0;
+
+            Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
+            MoveCursor(newPos);
         }
 
         private void GetUserInput()
@@ -121,15 +135,7 @@ namespace CircuitCalcToolGUI
                 switch (key.Key)
                 {
                     case ConsoleKey.Tab:
-
-                        RedrawAll();
-
-                        cursorElementPos++;
-                        if (cursorElementPos >= textFields.Count)
-                            cursorElementPos = 0;
-
-                        Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
-                        MoveCursor(newPos);
+                        TabToNext();
                         break;
 
                     case ConsoleKey.Enter:
@@ -145,15 +151,27 @@ namespace CircuitCalcToolGUI
                         break;
 
                     case ConsoleKey.RightArrow:
+                        RedrawAll();
 
+                        MoveCursor(new Position(cursorPos.x + 1, cursorPos.y));
                         break;
 
                     case ConsoleKey.LeftArrow:
+                        RedrawAll();
 
+                        MoveCursor(new Position(cursorPos.x - 1, cursorPos.y));
                         break;
 
                     default:
-                        
+                        if (textFields[cursorElementPos].ChangeValue(key.KeyChar, cursorPos.x - textFields[cursorElementPos].pos.x))
+                        {
+                            ImportTextFields();
+                            RedrawAll();
+
+                            MoveCursor(new Position(cursorPos.x + 1, cursorPos.y));
+                        }
+                        else
+                            TabToNext();
                         break;
                 }
             }
