@@ -22,7 +22,11 @@ namespace CircuitCalcToolGUI
     {
         private Position windowSize;
         private string[] content = new string[30];
-        private List<TextField> textFields = new List<TextField>();
+        private readonly List<TextField> textFields = new List<TextField>();
+        private readonly List<Button> buttons = new List<Button>();
+
+        private List<Position> tabPos = new List<Position>();
+        private int tabIndex;
 
         private Position cursorPos = new Position(0, 0);
         private int cursorElementPos = 0;
@@ -45,6 +49,10 @@ namespace CircuitCalcToolGUI
         {
             textFields.Add(field);
         }
+        public void AddButton(Button button)
+        {
+            buttons.Add(button);
+        }
         #endregion;
 
         #region OneTime
@@ -59,13 +67,57 @@ namespace CircuitCalcToolGUI
             /*textFields[0].ChangeValue("TestTe", 0);
             textFields[1].ChangeValue("TestTestTe", 0);*/
 
-            ImportTextFields();
+            ImportAll();
             RedrawAll();
 
             Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
             MoveCursor(newPos);
 
             GetUserInput();
+        }
+        #endregion
+
+        #region Importers
+        private void ImportAll()
+        {
+            ImportTextFields();
+            ImportButtons();
+        }
+        private void ImportTextFields()
+        {
+            int x = 0, y = 0;
+            foreach (var item in textFields)
+            {
+                for (int c = item.pos.y - 1; c < item.pos.y + 2; c++)
+                {
+                    for (int i = item.pos.x - 1; i < ((item.pos.x - 1) + item.width); i++)
+                    {
+                        content[c] = ChangeChar(content[c], i, item.text[y][x].ToString());
+                        x++;
+                    }
+                    x = 0;
+                    y++;
+                }
+                y = 0;
+            }
+        }
+        private void ImportButtons()
+        {
+            int x = 0, y = 0;
+            foreach (var item in buttons)
+            {
+                for (int c = item.pos.y - 1; c < item.pos.y + 2; c++)
+                {
+                    for (int i = item.pos.x - 1; i < ((item.pos.x - 1) + item.width); i++)
+                    {
+                        content[c] = ChangeChar(content[c], i, item.text[y][x].ToString());
+                        x++;
+                    }
+                    x = 0;
+                    y++;
+                }
+                y = 0;
+            }
         }
         #endregion
 
@@ -76,23 +128,9 @@ namespace CircuitCalcToolGUI
         }
         #endregion
 
-        private void ImportTextFields()
+        private void SetupTabPos()
         {
-            int x = 0, y = 0;
-            foreach(var item in textFields)
-            {
-                for (int c = item.pos.y - 1; c < item.pos.y + 2; c++)
-                {
-                    for(int i = item.pos.x - 1; i < ((item.pos.x - 1) + item.width); i++)
-                    {
-                        content[c] = ChangeChar(content[c], i, item.text[y][x].ToString());
-                        x++;
-                    }
-                    x = 0;
-                    y++;
-                }
-                y = 0;
-            }
+            
         }
 
         private void RedrawAll()
