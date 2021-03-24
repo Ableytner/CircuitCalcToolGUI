@@ -20,16 +20,6 @@ namespace CircuitCalcToolGUI
 
     class GUI
     {
-        private Position windowSize;
-        private string[] content = new string[30];
-        private readonly List<TextField> textFields = new List<TextField>();
-        private readonly List<Button> buttons = new List<Button>();
-
-        private List<Position> tabPos = new List<Position>();
-        private int tabIndex = 0;
-        private Position cursorPos = new Position(0, 0);
-        private int cursorElementPos = 0;
-
         public GUI(Position windowSize)
         {
             SetWindowSize(windowSize);
@@ -42,6 +32,16 @@ namespace CircuitCalcToolGUI
 
             content = StringBuilder.Border(StringBuilder.GetPreset(windowSize, borderPreset));
         }
+
+        private Position windowSize;
+        private string[] content = new string[30];
+        private readonly List<TextField> textFields = new List<TextField>();
+        private readonly List<Button> buttons = new List<Button>();
+
+        private List<Tuple<Position, int[]>> tabPos = new List<Tuple<Position, int[]>>();
+        private int tabIndex = 0;
+
+        private Position cursorPos = new Position(0, 0);
 
         #region Public
         public void AddTextField(TextField field)
@@ -127,23 +127,21 @@ namespace CircuitCalcToolGUI
         }
         #endregion
 
-        #region Helpers
-        private string ChangeChar(string s, int index, string newChar)
-        {
-            return s.Remove(index, 1).Insert(index, newChar);
-        }
-        #endregion
-
         #region TabPos
         private void SetupTabPos()
         {
+            int x = 0;
+
             foreach(var item in textFields)
             {
-                tabPos.Add(new Position(item.pos.x + item.valuePos - 1, item.pos.y));
+                tabPos.Add(new Tuple<Position, int[]>(new Position(item.pos.x + item.valuePos - 1, item.pos.y), new int[] { 0, x }));
+                x++;
             }
+            x = 0;
             foreach(var item in buttons)
             {
-                tabPos.Add(new Position(item.pos.x + item.titlePos - 1, item.pos.y));
+                tabPos.Add(new Tuple<Position, int[]>(new Position(item.pos.x + item.titlePos - 1, item.pos.y), new int[] { 1, x }));
+                x++;
             }
 
             SortTabPos();
@@ -153,16 +151,16 @@ namespace CircuitCalcToolGUI
             int c = 0;
             while (c < tabPos.Count - 1)
             {
-                if (tabPos[c].y > tabPos[c + 1].y)
+                if (tabPos[c].Item1.y > tabPos[c + 1].Item1.y)
                 {
                     ExchangeTabPos(c, c + 1);
 
                     if (c - 1 >= 0)
                         c -= 1;
                 }
-                else if (tabPos[c].y == tabPos[c + 1].y)
+                else if (tabPos[c].Item1.y == tabPos[c + 1].Item1.y)
                 {
-                    if (tabPos[c].x > tabPos[c + 1].x)
+                    if (tabPos[c].Item1.x > tabPos[c + 1].Item1.x)
                     {
                         ExchangeTabPos(c, c + 1);
 
@@ -178,11 +176,43 @@ namespace CircuitCalcToolGUI
         }
         public void ExchangeTabPos(int m, int n)
         {
-            Position temporary;
+            Tuple<Position, int[]> temporary;
 
             temporary = tabPos[m];
             tabPos[m] = tabPos[n];
             tabPos[n] = temporary;
+        }
+        #endregion
+
+        #region Tabbing
+        private void TabToNext()
+        {
+            RedrawAll();
+
+            tabIndex++;
+            if (tabIndex >= tabPos.Count)
+                tabIndex = 0;
+
+            Position newPos = new Position(tabPos[tabIndex].Item1.x, tabPos[tabIndex].Item1.y);
+            MoveCursor(newPos);
+        }
+        private void TabToLast()
+        {
+            RedrawAll();
+
+            tabIndex--;
+            if (tabIndex < 0)
+                tabIndex = tabPos.Count - 1;
+
+            Position newPos = new Position(tabPos[tabIndex].Item1.x, tabPos[tabIndex].Item1.y);
+            MoveCursor(newPos);
+        }
+        #endregion
+
+        #region Helpers
+        private string ChangeChar(string s, int index, string newChar)
+        {
+            return s.Remove(index, 1).Insert(index, newChar);
         }
         #endregion
 
@@ -203,36 +233,6 @@ namespace CircuitCalcToolGUI
         {
             Console.SetCursorPosition(pos.x, pos.y);
             cursorPos = pos;
-        }
-
-        private void TabToNext()
-        {
-            RedrawAll();
-
-            tabIndex++;
-            if (tabIndex >= tabPos.Count)
-                tabIndex = 0;
-
-            Position newPos = new Position(tabPos[tabIndex].x, tabPos[tabIndex].y);
-            MoveCursor(newPos);
-
-            /*cursorElementPos++;
-            if (cursorElementPos >= textFields.Count)
-                cursorElementPos = 0;
-
-            newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
-            MoveCursor(newPos);*/
-        }
-        private void TabToLast()
-        {
-            RedrawAll();
-
-            tabIndex--;
-            if (tabIndex < 0)
-                tabIndex = tabPos.Count - 1;
-
-            Position newPos = new Position(tabPos[tabIndex].x, tabPos[tabIndex].y);
-            MoveCursor(newPos);
         }
 
         private void GetUserInput()
@@ -274,19 +274,25 @@ namespace CircuitCalcToolGUI
                         break;
 
                     case ConsoleKey.Escape:
+                        RedrawAll();
                         Environment.Exit(0);
                         break;
 
                     default:
-                        if (textFields[cursorElementPos].ChangeValue(key.KeyChar, cursorPos.x - textFields[cursorElementPos].pos.x))
+                        if (tabPos[tabIndex].Item2[0] == 0)
                         {
-                            ImportTextFields();
-                            RedrawAll();
+                            if (textFields[tabPos[tabIndex].Item2[1]].ChangeValue(key.KeyChar, cursorPos.x - textFields[tabPos[tabIndex].Item2[1]].pos.x))
+                            {
+                                ImportTextFields();
+                                RedrawAll();
 
-                            MoveCursor(new Position(cursorPos.x + 1, cursorPos.y));
+                                MoveCursor(new Position(cursorPos.x + 1, cursorPos.y));
+                            }
+                            else
+                                TabToNext();
                         }
                         else
-                            TabToNext();
+                            RedrawAll();
                         break;
                 }
             }
