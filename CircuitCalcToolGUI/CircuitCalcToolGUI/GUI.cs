@@ -44,8 +44,6 @@ namespace CircuitCalcToolGUI
         public void AddTextField(TextField field)
         {
             textFields.Add(field);
-            //ImportTextFields();
-            //RedrawAll();
         }
         #endregion;
 
@@ -58,11 +56,14 @@ namespace CircuitCalcToolGUI
         }
         public void Start()
         {
-            textFields[0].ChangeValue("TestTe", 0);
-            textFields[1].ChangeValue("TestTestTe", 0);
+            /*textFields[0].ChangeValue("TestTe", 0);
+            textFields[1].ChangeValue("TestTestTe", 0);*/
 
             ImportTextFields();
             RedrawAll();
+
+            Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
+            MoveCursor(newPos);
 
             GetUserInput();
         }
