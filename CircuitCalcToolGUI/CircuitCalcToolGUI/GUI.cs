@@ -34,7 +34,7 @@ namespace CircuitCalcToolGUI
         }
 
         private Position windowSize;
-        private string[] content = new string[30];
+        private string[] content;
         private readonly List<TextField> textFields = new List<TextField>();
         private readonly List<Button> buttons = new List<Button>();
 
@@ -42,6 +42,8 @@ namespace CircuitCalcToolGUI
         private int tabIndex = 0;
 
         private Position cursorPos = new Position(0, 0);
+
+        private Tuple<Position, int> background = new Tuple<Position, int>(new Position(), 0);
 
         #region Public
         public void AddTextField(TextField field)
@@ -233,6 +235,17 @@ namespace CircuitCalcToolGUI
         {
             Console.SetCursorPosition(pos.x, pos.y);
             cursorPos = pos;
+
+            if (tabPos.Count >= 1)
+            {
+                if (tabPos[tabIndex].Item2[0] == 1)
+                {
+                    if (background.Item2 == 0)
+                        background = new Tuple<Position, int>(tabPos[tabIndex].Item1, buttons[tabPos[tabIndex].Item2[1]].width - 1);
+                }
+                else if (background.Item2 != 0)
+                    background = new Tuple<Position, int>(new Position(), 0);
+            }
         }
 
         private void GetUserInput()
