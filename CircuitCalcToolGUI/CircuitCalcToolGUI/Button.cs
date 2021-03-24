@@ -45,7 +45,7 @@ namespace CircuitCalcToolGUI
 
         private void Initialize()
         {
-            titlePos = 0;
+            titlePos = 1;
 
             UpdateArr();
         }

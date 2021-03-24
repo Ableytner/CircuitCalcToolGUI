@@ -26,8 +26,7 @@ namespace CircuitCalcToolGUI
         private readonly List<Button> buttons = new List<Button>();
 
         private List<Position> tabPos = new List<Position>();
-        private int tabIndex;
-
+        private int tabIndex = 0;
         private Position cursorPos = new Position(0, 0);
         private int cursorElementPos = 0;
 
@@ -67,13 +66,20 @@ namespace CircuitCalcToolGUI
             /*textFields[0].ChangeValue("TestTe", 0);
             textFields[1].ChangeValue("TestTestTe", 0);*/
 
+            SetupTabPos();
+
             ImportAll();
             RedrawAll();
 
-            Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
-            MoveCursor(newPos);
+            if (tabPos.Count >= 1)
+            {
+                tabIndex = tabPos.Count;
+                TabToNext();
 
-            GetUserInput();
+                GetUserInput();
+            }
+            else
+                MoveCursor(new Position(1, 1));
         }
         #endregion
 
@@ -128,10 +134,57 @@ namespace CircuitCalcToolGUI
         }
         #endregion
 
+        #region TabPos
         private void SetupTabPos()
         {
-            
+            foreach(var item in textFields)
+            {
+                tabPos.Add(new Position(item.pos.x + item.valuePos - 1, item.pos.y));
+            }
+            foreach(var item in buttons)
+            {
+                tabPos.Add(new Position(item.pos.x + item.titlePos - 1, item.pos.y));
+            }
+
+            SortTabPos();
         }
+        private void SortTabPos()
+        {
+            int c = 0;
+            while (c < tabPos.Count - 1)
+            {
+                if (tabPos[c].y > tabPos[c + 1].y)
+                {
+                    ExchangeTabPos(c, c + 1);
+
+                    if (c - 1 >= 0)
+                        c -= 1;
+                }
+                else if (tabPos[c].y == tabPos[c + 1].y)
+                {
+                    if (tabPos[c].x > tabPos[c + 1].x)
+                    {
+                        ExchangeTabPos(c, c + 1);
+
+                        if (c - 1 >= 0)
+                            c -= 1;
+                    }
+                    else
+                        c++;
+                }
+                else
+                    c++;
+            }
+        }
+        public void ExchangeTabPos(int m, int n)
+        {
+            Position temporary;
+
+            temporary = tabPos[m];
+            tabPos[m] = tabPos[n];
+            tabPos[n] = temporary;
+        }
+        #endregion
 
         private void RedrawAll()
         {
@@ -156,22 +209,29 @@ namespace CircuitCalcToolGUI
         {
             RedrawAll();
 
-            cursorElementPos++;
+            tabIndex++;
+            if (tabIndex >= tabPos.Count)
+                tabIndex = 0;
+
+            Position newPos = new Position(tabPos[tabIndex].x, tabPos[tabIndex].y);
+            MoveCursor(newPos);
+
+            /*cursorElementPos++;
             if (cursorElementPos >= textFields.Count)
                 cursorElementPos = 0;
 
-            Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
-            MoveCursor(newPos);
+            newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
+            MoveCursor(newPos);*/
         }
         private void TabToLast()
         {
             RedrawAll();
 
-            cursorElementPos--;
-            if (cursorElementPos < 0)
-                cursorElementPos = textFields.Count - 1;
+            tabIndex--;
+            if (tabIndex < 0)
+                tabIndex = tabPos.Count - 1;
 
-            Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
+            Position newPos = new Position(tabPos[tabIndex].x, tabPos[tabIndex].y);
             MoveCursor(newPos);
         }
 
