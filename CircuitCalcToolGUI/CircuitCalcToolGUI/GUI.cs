@@ -31,30 +31,21 @@ namespace CircuitCalcToolGUI
         {
             SetWindowSize(windowSize);
 
-            content = StringBuilder.Border(windowSize);
+            content = StringBuilder.Border(StringBuilder.GetPreset(windowSize, 0));
+        }
+        public GUI(Position windowSize, int borderPreset)
+        {
+            SetWindowSize(windowSize);
 
-            AddTextField(new TextField(new Position(5, 5), 15, "Title", "+", "+"));
-            
-            MoveCursor(new Position(5, 5));
+            content = StringBuilder.Border(StringBuilder.GetPreset(windowSize, borderPreset));
         }
 
         #region Public
-        public void Main()
-        {
-            textFields[0].ChangeValue("TestTe", 0);
-            textFields[1].ChangeValue("TestTestTe", 0);
-
-            ImportTextFields();
-            RedrawAll();
-
-            GetUserInput();
-        }
-
         public void AddTextField(TextField field)
         {
             textFields.Add(field);
-            ImportTextFields();
-            RedrawAll();
+            //ImportTextFields();
+            //RedrawAll();
         }
         #endregion;
 
@@ -64,6 +55,16 @@ namespace CircuitCalcToolGUI
             Console.SetWindowSize(windowSize.x, windowSize.y);
             this.windowSize = windowSize;
             Array.Resize(ref content, windowSize.y);
+        }
+        public void Start()
+        {
+            textFields[0].ChangeValue("TestTe", 0);
+            textFields[1].ChangeValue("TestTestTe", 0);
+
+            ImportTextFields();
+            RedrawAll();
+
+            GetUserInput();
         }
         #endregion
 
@@ -123,6 +124,17 @@ namespace CircuitCalcToolGUI
             Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
             MoveCursor(newPos);
         }
+        private void TabToLast()
+        {
+            RedrawAll();
+
+            cursorElementPos--;
+            if (cursorElementPos < 0)
+                cursorElementPos = textFields.Count - 1;
+
+            Position newPos = new Position(textFields[cursorElementPos].pos.x + textFields[cursorElementPos].valuePos - 1, textFields[cursorElementPos].pos.y);
+            MoveCursor(newPos);
+        }
 
         private void GetUserInput()
         {
@@ -143,11 +155,11 @@ namespace CircuitCalcToolGUI
                         break;
 
                     case ConsoleKey.UpArrow:
-
+                        TabToLast();
                         break;
 
                     case ConsoleKey.DownArrow:
-
+                        TabToNext();
                         break;
 
                     case ConsoleKey.RightArrow:
@@ -160,6 +172,10 @@ namespace CircuitCalcToolGUI
                         RedrawAll();
 
                         MoveCursor(new Position(cursorPos.x - 1, cursorPos.y));
+                        break;
+
+                    case ConsoleKey.Escape:
+                        Environment.Exit(0);
                         break;
 
                     default:

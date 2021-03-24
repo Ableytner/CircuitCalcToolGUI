@@ -8,12 +8,43 @@ namespace CircuitCalcToolGUI
 {
     class TextField
     {
-        public TextField(Position pos, int width, string title = "", string cornTop = ".", string cornBot = "'", string borderVert = "|", string borderHori = "-")
+        public TextField(Position pos, int width, string title = "")
         {
             this.pos = pos;
             this.width = width;
+            this.title = title;
 
-            text = StringBuilder.Border(new Position(width, 3), cornTop, cornBot, borderVert, borderHori);
+            Border border = StringBuilder.GetPreset(new Position(width, 3), 0);
+            text = StringBuilder.Border(border);
+
+            Initialize(border.borderVert);
+
+        }
+        public TextField(Position pos, int width, int preset, string title = "")
+        {
+            this.pos = pos;
+            this.width = width;
+            this.title = title;
+
+            Border border = StringBuilder.GetPreset(new Position(width, 3), preset);
+            text = StringBuilder.Border(border);
+
+            Initialize(border.borderVert);
+
+        }
+        public TextField(Position pos, int width, string cornTop, string cornBot, string borderVert, string borderHori, string title = "")
+        {
+            this.pos = pos;
+            this.width = width;
+            this.title = title;
+
+            text = StringBuilder.Border(new Border(new Position(width, 3), cornTop, cornBot, borderVert, borderHori));
+
+            Initialize(borderVert);
+        }
+
+        private void Initialize(string borderVert)
+        {
             value = "";
 
             if (!(title == "" || title == null))
@@ -26,7 +57,7 @@ namespace CircuitCalcToolGUI
                 }
                 text[1] += borderVert;
                 valuePos = title.Length + 3;
-                
+
             }
             else
             {
@@ -34,10 +65,6 @@ namespace CircuitCalcToolGUI
                 for (int c = 0; c < width - 2; c++)
                     value += " ";
             }
-
-            /*Console.WriteLine(text[0]);
-            Console.WriteLine(text[1]);
-            Console.WriteLine(text[2]);*/
         }
 
         public readonly Position pos;
@@ -45,6 +72,7 @@ namespace CircuitCalcToolGUI
         public string[] text = new string[3];
         public string value;
         public int valuePos;
+        private string title;
 
         public bool ChangeValue(char toChange, int index)
         {

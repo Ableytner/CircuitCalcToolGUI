@@ -6,31 +6,76 @@ using System.Threading.Tasks;
 
 namespace CircuitCalcToolGUI
 {
+    struct Border
+    {
+        public Border(Position size, string cornTop = ".", string cornBot = "'", string borderVert = "|", string borderHori = "-")
+        {
+            this.size = size;
+            this.cornTop = cornTop;
+            this.cornBot = cornBot;
+            this.borderVert = borderVert;
+            this.borderHori = borderHori;
+        }
+
+        public readonly Position size;
+        public readonly string cornTop;
+        public readonly string cornBot;
+        public readonly string borderVert;
+        public readonly string borderHori;
+    }
+
     class StringBuilder
     {
-        public static string[] Border(Position size, string cornTop = ".", string cornBot = "'", string borderVert = "|", string borderHori = "-")
+        public static string[] Border(Position size)
         {
-            string[] border = new string[size.y];
+            return DrawBorder(GetPreset(size, 0));
+        }
+        public static string[] Border(Border border)
+        {
+            return DrawBorder(border);
+        }
 
-            border[0] += cornTop;
-            for (int c = 1; c < size.x - 1; c++)
-                border[0] += borderHori;
-            border[0] += cornTop;
+        private static string[] DrawBorder(Border borderPreset)
+        {
+            string[] border = new string[borderPreset.size.y];
 
-            for(int i = 1; i < size.y - 1; i++)
+            border[0] += borderPreset.cornTop;
+            for (int c = 1; c < borderPreset.size.x - 1; c++)
+                border[0] += borderPreset.borderHori;
+            border[0] += borderPreset.cornTop;
+
+            for (int i = 1; i < borderPreset.size.y - 1; i++)
             {
-                border[i] += borderVert;
-                for (int c = 1; c < size.x - 1; c++)
+                border[i] += borderPreset.borderVert;
+                for (int c = 1; c < borderPreset.size.x - 1; c++)
                     border[i] += " ";
-                border[i] += borderVert;
+                border[i] += borderPreset.borderVert;
             }
 
-            border[size.y - 1] += cornBot;
-            for (int c = 1; c < size.x - 1; c++)
-                border[size.y - 1] += borderHori;
-            border[size.y - 1] += cornBot;
+            border[borderPreset.size.y - 1] += borderPreset.cornBot;
+            for (int c = 1; c < borderPreset.size.x - 1; c++)
+                border[borderPreset.size.y - 1] += borderPreset.borderHori;
+            border[borderPreset.size.y - 1] += borderPreset.cornBot;
 
             return border;
+        }
+
+        public static Border GetPreset(Position size, int preset)
+        {
+            switch (preset)
+            {
+                case 0:
+                    return new Border(size, ".", "'", "|", "-");
+
+                case 1:
+                    return new Border(size, "+", "+", "|", "-");
+
+                case 2:
+                    return new Border(size, " ", " ", " ", " ");
+
+                default:
+                    return GetPreset(size, 0);
+            }
         }
     }
 }
