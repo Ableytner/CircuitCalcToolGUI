@@ -10,7 +10,27 @@ namespace CircuitCalcToolGUI
     {
         static void Main(string[] args)
         {
-            Testing();
+            //Testing();
+            CalculatorInit();
+        }
+
+        static void CalculatorInit()
+        {
+            GUI gui = new GUI(new Position(47, 20), 1);
+            TextField[] fields = new TextField[3];
+            fields[0] = new TextField(new Position(2, 2), 15, "U");
+            fields[1] = new TextField(new Position(17, 2), 15, "I");
+            fields[2] = new TextField(new Position(32, 2), 15, "Ri");
+
+            Button calculate = new Button(new Position(17, 5), 15, "Calculate");
+            ProtectedTextField result = new ProtectedTextField(new Position(17, 8), 15);
+
+            foreach (var item in fields)
+                gui.AddTextField(item);
+            gui.AddButton(calculate);
+            gui.AddProtectedTextField(result);
+
+            gui.Start();
         }
 
         static void Testing()
@@ -34,7 +54,10 @@ namespace CircuitCalcToolGUI
             button.Clicked += Button4Clicked;
             gui.AddButton(button);
 
-            gui.AddProtectedTextField(new ProtectedTextField(new Position(40, 20), 15, "Field1"));
+            ProtectedTextField field = new ProtectedTextField(new Position(40, 20), 15, "Field1");
+            gui.AddProtectedTextField(field);
+            field.ChangeValue('2', 5);
+            field.ChangeValue('3', 5);
 
             gui.Start();
         }

@@ -355,6 +355,26 @@ namespace CircuitCalcToolGUI
                         Environment.Exit(0);
                         break;
 
+                    case ConsoleKey.Backspace:
+                        if ((tabPos[tabIndex].Item2[0] == 0) && (((cursorPos.x - textFields[tabPos[tabIndex].Item2[1]].pos.x) - textFields[tabPos[tabIndex].Item2[1]].valuePos) >= 0))
+                        {
+                            if (textFields[tabPos[tabIndex].Item2[1]].ChangeValue(' ', cursorPos.x - textFields[tabPos[tabIndex].Item2[1]].pos.x - 1))
+                            {
+                                ImportTextFields();
+                                RedrawAll();
+
+                                MoveCursor(new Position(cursorPos.x - 1, cursorPos.y));
+                            }
+                            else
+                                TabToNext();
+                        }
+                        else
+                        {
+                            RedrawAll();
+                            MoveCursor(cursorPos);
+                        }
+                        break;
+
                     default:
                         if (tabPos[tabIndex].Item2[0] == 0)
                         {
