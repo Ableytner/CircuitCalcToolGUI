@@ -8,24 +8,25 @@ namespace CircuitCalcToolGUI
 {
     class Calculator
     {
-        private float U = 0f, I = 0f, Ri = 0f;
+        private double U = 0d, I = 0d, Ri = 0d;
 
-        public void setU(float U)
+        public void setU(double U)
         {
             this.U = U;
         }
-        public void setI(float I)
+        public void setI(double I)
         {
             this.I = I;
         }
-        public void setRi(float Ri)
+        public void setRi(double Ri)
         {
             this.Ri = Ri;
         }
 
-        public float getResult()
+        public double getResult()
         {
-            throw new NotImplementedException();
+            return 1;
+            //throw new NotImplementedException();
         }
     }
 }

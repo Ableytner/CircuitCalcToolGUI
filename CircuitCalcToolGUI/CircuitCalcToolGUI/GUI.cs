@@ -239,6 +239,7 @@ namespace CircuitCalcToolGUI
         private void RedrawAll()
         {
             Console.Clear();
+            ImportAll();
 
             for(int c = 0; c < windowSize.y - 1; c++)
             {
@@ -327,6 +328,8 @@ namespace CircuitCalcToolGUI
 
                         if (tabPos[tabIndex].Item2[0] == 1)
                             buttons[tabPos[tabIndex].Item2[1]].Press();
+
+                        RedrawAll();
                         break;
 
                     case ConsoleKey.UpArrow:

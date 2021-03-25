@@ -14,23 +14,39 @@ namespace CircuitCalcToolGUI
             CalculatorInit();
         }
 
+        private static GUI gui;
+        private static TextField[] fields;
+        private static Button calculateButton;
+        private static ProtectedTextField resultField;
+
         static void CalculatorInit()
         {
-            GUI gui = new GUI(new Position(47, 20), 1);
-            TextField[] fields = new TextField[3];
+            gui = new GUI(new Position(47, 20), 1);
+
+            fields = new TextField[3];
             fields[0] = new TextField(new Position(2, 2), 15, "U");
             fields[1] = new TextField(new Position(17, 2), 15, "I");
             fields[2] = new TextField(new Position(32, 2), 15, "Ri");
 
-            Button calculate = new Button(new Position(17, 5), 15, "Calculate");
-            ProtectedTextField result = new ProtectedTextField(new Position(17, 8), 15);
+            calculateButton = new Button(new Position(17, 5), 15, "Calculate");
+            calculateButton.Clicked += Calculate;
+            resultField = new ProtectedTextField(new Position(17, 8), 15);
 
             foreach (var item in fields)
                 gui.AddTextField(item);
-            gui.AddButton(calculate);
-            gui.AddProtectedTextField(result);
+            gui.AddButton(calculateButton);
+            gui.AddProtectedTextField(resultField);
 
             gui.Start();
+        }
+
+        static void Calculate(object sender, EventArgs args)
+        {
+            Calculator calcualtor = new Calculator();
+            calcualtor.setU(Convert.ToDouble(fields[0].value));
+            calcualtor.setI(Convert.ToDouble(fields[1].value));
+            calcualtor.setRi(Convert.ToDouble(fields[2].value));
+            gui.protectedTextFields[0].ChangeValue(calcualtor.getResult().ToString());
         }
 
         static void Testing()

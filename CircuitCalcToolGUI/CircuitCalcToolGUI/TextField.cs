@@ -77,7 +77,7 @@ namespace CircuitCalcToolGUI
         public bool ChangeValue(char toChange, int index)
         {
             index = index - valuePos + 1;
-            if (index < (value.Length))
+            if (index < value.Length)
             {
                 value = ChangeChar(value, index, toChange.ToString());
                 UpdateArr();
