@@ -56,6 +56,11 @@ namespace CircuitCalcToolGUI
         public string title;
         public int titlePos;
 
+        public void Press()
+        {
+            throw new Exception(title);
+        }
+
         private void UpdateArr()
         {
             for (int c = 1; c < title.Length + 1; c++)

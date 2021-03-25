@@ -43,7 +43,7 @@ namespace CircuitCalcToolGUI
 
         private Position cursorPos = new Position(0, 0);
 
-        private Tuple<Position, int> background = new Tuple<Position, int>(new Position(), 0);
+        private Tuple<Position, int> background = new Tuple<Position, int>(new Position(), -1);
 
         #region Public
         public void AddTextField(TextField field)
@@ -75,8 +75,8 @@ namespace CircuitCalcToolGUI
 
             if (tabPos.Count >= 1)
             {
-                tabIndex = tabPos.Count;
-                TabToNext();
+                //tabIndex = tabPos.Count;
+                //TabToNext();
 
                 GetUserInput();
             }
@@ -224,11 +224,58 @@ namespace CircuitCalcToolGUI
 
             for(int c = 0; c < windowSize.y - 1; c++)
             {
-                Console.WriteLine(content[c]);
+                if(background.Item2 != -1)
+                {
+                    if (background.Item1.y == c)
+                    {
+                        string s = "";
+                        for (int i = 0; i < background.Item1.x; i++)
+                        {
+                            s += content[c][i];
+                        }
+                        Console.Write(s);
+                        s = "";
+
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+
+                        for (int i = 0; i < background.Item2 - 1; i++)
+                        {
+                            s += content[c][i + background.Item1.x];
+                        }
+                        Console.Write(s);
+                        s = "";
+
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        for (int i = background.Item1.x + background.Item2 - 1; i < content[c].Length; i++)
+                        {
+                            s += content[c][i];
+                        }
+                        Console.WriteLine(s);
+                    }
+                    else
+                        Console.WriteLine(content[c]);
+                }
+                else
+                    Console.WriteLine(content[c]);
             }
             Console.Write(content[windowSize.y - 1]);
+        }
 
-            MoveCursor(cursorPos);
+        private void SetBackground()
+        {
+            if (tabPos.Count > 0)
+            {
+                background = new Tuple<Position, int>(new Position(), -1);
+
+                if (tabPos[tabIndex].Item2[0] == 1)
+                {
+                    if (background.Item2 == -1)
+                        background = new Tuple<Position, int>(tabPos[tabIndex].Item1, buttons[tabPos[tabIndex].Item2[1]].width - 1);
+                }
+            }
         }
 
         private void MoveCursor(Position pos)
@@ -236,16 +283,11 @@ namespace CircuitCalcToolGUI
             Console.SetCursorPosition(pos.x, pos.y);
             cursorPos = pos;
 
-            if (tabPos.Count >= 1)
-            {
-                if (tabPos[tabIndex].Item2[0] == 1)
-                {
-                    if (background.Item2 == 0)
-                        background = new Tuple<Position, int>(tabPos[tabIndex].Item1, buttons[tabPos[tabIndex].Item2[1]].width - 1);
-                }
-                else if (background.Item2 != 0)
-                    background = new Tuple<Position, int>(new Position(), 0);
-            }
+            SetBackground();
+
+            RedrawAll();
+            
+            Console.SetCursorPosition(cursorPos.x, cursorPos.y);
         }
 
         private void GetUserInput()
@@ -263,7 +305,10 @@ namespace CircuitCalcToolGUI
                         break;
 
                     case ConsoleKey.Enter:
-                        
+                        MoveCursor(cursorPos);
+
+                        if(tabPos[tabIndex].Item2[0] == 1)
+                            buttons[tabPos[tabIndex].Item2[1]].Press();
                         break;
 
                     case ConsoleKey.UpArrow:
