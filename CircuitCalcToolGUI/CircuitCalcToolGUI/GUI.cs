@@ -35,8 +35,10 @@ namespace CircuitCalcToolGUI
 
         private Position windowSize;
         private string[] content;
-        private readonly List<TextField> textFields = new List<TextField>();
-        private readonly List<Button> buttons = new List<Button>();
+
+        public readonly List<TextField> textFields = new List<TextField>();
+        public readonly List<Button> buttons = new List<Button>();
+        public readonly List<ProtectedTextField> protectedTextFields = new List<ProtectedTextField>();
 
         private List<Tuple<Position, int[]>> tabPos = new List<Tuple<Position, int[]>>();
         private int tabIndex = 0;
@@ -54,6 +56,10 @@ namespace CircuitCalcToolGUI
         {
             buttons.Add(button);
         }
+        public void AddProtectedTextField(ProtectedTextField field)
+        {
+            protectedTextFields.Add(field);
+        }
         #endregion;
 
         #region OneTime
@@ -65,9 +71,6 @@ namespace CircuitCalcToolGUI
         }
         public void Start()
         {
-            /*textFields[0].ChangeValue("TestTe", 0);
-            textFields[1].ChangeValue("TestTestTe", 0);*/
-
             SetupTabPos();
 
             ImportAll();
@@ -75,8 +78,8 @@ namespace CircuitCalcToolGUI
 
             if (tabPos.Count >= 1)
             {
-                //tabIndex = tabPos.Count;
-                //TabToNext();
+                tabIndex = tabPos.Count;
+                TabToNext();
 
                 GetUserInput();
             }
@@ -90,6 +93,7 @@ namespace CircuitCalcToolGUI
         {
             ImportTextFields();
             ImportButtons();
+            ImportProtectedTextFields();
         }
         private void ImportTextFields()
         {
@@ -113,6 +117,24 @@ namespace CircuitCalcToolGUI
         {
             int x = 0, y = 0;
             foreach (var item in buttons)
+            {
+                for (int c = item.pos.y - 1; c < item.pos.y + 2; c++)
+                {
+                    for (int i = item.pos.x - 1; i < ((item.pos.x - 1) + item.width); i++)
+                    {
+                        content[c] = ChangeChar(content[c], i, item.text[y][x].ToString());
+                        x++;
+                    }
+                    x = 0;
+                    y++;
+                }
+                y = 0;
+            }
+        }
+        private void ImportProtectedTextFields()
+        {
+            int x = 0, y = 0;
+            foreach (var item in protectedTextFields)
             {
                 for (int c = item.pos.y - 1; c < item.pos.y + 2; c++)
                 {
@@ -329,6 +351,7 @@ namespace CircuitCalcToolGUI
 
                     case ConsoleKey.Escape:
                         RedrawAll();
+                        MoveCursor(cursorPos);
                         Environment.Exit(0);
                         break;
 

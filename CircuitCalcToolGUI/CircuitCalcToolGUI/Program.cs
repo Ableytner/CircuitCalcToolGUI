@@ -10,6 +10,11 @@ namespace CircuitCalcToolGUI
     {
         static void Main(string[] args)
         {
+            Testing();
+        }
+
+        static void Testing()
+        {
             GUI gui = new GUI(new Position(60, 30));
             gui.AddTextField(new TextField(new Position(5, 5), 15, 1, "Title"));
 
@@ -28,6 +33,8 @@ namespace CircuitCalcToolGUI
             button = new Button(new Position(15, 15), 15, 1, "Button4");
             button.Clicked += Button4Clicked;
             gui.AddButton(button);
+
+            gui.AddProtectedTextField(new ProtectedTextField(new Position(40, 20), 15, "Field1"));
 
             gui.Start();
         }
