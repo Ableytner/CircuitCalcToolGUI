@@ -56,9 +56,19 @@ namespace CircuitCalcToolGUI
         public string title;
         public int titlePos;
 
+        public event EventHandler Clicked;
+        protected virtual void OnClicked(EventArgs e)
+        {
+            EventHandler handler = Clicked;
+            if(handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
         public void Press()
         {
-            throw new Exception(title);
+            OnClicked(EventArgs.Empty);
         }
 
         private void UpdateArr()

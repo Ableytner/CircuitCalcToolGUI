@@ -132,18 +132,14 @@ namespace CircuitCalcToolGUI
         #region TabPos
         private void SetupTabPos()
         {
-            int x = 0;
 
-            foreach(var item in textFields)
+            for(int c = 0; c < textFields.Count; c++)
             {
-                tabPos.Add(new Tuple<Position, int[]>(new Position(item.pos.x + item.valuePos - 1, item.pos.y), new int[] { 0, x }));
-                x++;
+                tabPos.Add(new Tuple<Position, int[]>(new Position(textFields[c].pos.x + textFields[c].valuePos - 1, textFields[c].pos.y), new int[] { 0, c }));
             }
-            x = 0;
-            foreach(var item in buttons)
+            for(int c = 0; c < buttons.Count; c++)
             {
-                tabPos.Add(new Tuple<Position, int[]>(new Position(item.pos.x + item.titlePos - 1, item.pos.y), new int[] { 1, x }));
-                x++;
+                tabPos.Add(new Tuple<Position, int[]>(new Position(buttons[c].pos.x + buttons[c].titlePos - 1, buttons[c].pos.y), new int[] { 1, c }));
             }
 
             SortTabPos();
@@ -307,7 +303,7 @@ namespace CircuitCalcToolGUI
                     case ConsoleKey.Enter:
                         MoveCursor(cursorPos);
 
-                        if(tabPos[tabIndex].Item2[0] == 1)
+                        if (tabPos[tabIndex].Item2[0] == 1)
                             buttons[tabPos[tabIndex].Item2[1]].Press();
                         break;
 
