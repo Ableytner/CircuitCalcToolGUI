@@ -319,6 +319,12 @@ namespace CircuitCalcToolGUI
 
         private void MoveCursor(Position pos)
         {
+            if (pos.x >= windowSize.x - 1 || pos.x <= 0)
+            {
+                pos = tabPos[0].Item1;
+                tabIndex = 0;
+            }
+
             Console.SetCursorPosition(pos.x, pos.y);
             cursorPos = pos;
 
