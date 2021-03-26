@@ -19,3 +19,5 @@ Enter to press a button (the selected one will be pressed)
 Press the button to the left of tho "Calculate"-button to switch between current-correct and voltage-correct 
 
 The result will be shown beneath the "Calculate"-button 
+
+Pressing escape will exit the application 
