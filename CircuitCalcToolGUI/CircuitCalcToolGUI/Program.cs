@@ -32,7 +32,7 @@ namespace CircuitCalcToolGUI
 
             calculateButton = new Button(new Position(17, 5), 15, "Calculate");
             calculateButton.Clicked += Calculate;
-            modeChangeButton = new Button(new Position(32, 5), 15, "Current corr");
+            modeChangeButton = new Button(new Position(2, 5), 15, "Current corr");
             modeChangeButton.Clicked += ChangeMode;
             resultField = new ProtectedTextField(new Position(17, 8), 15);
 
