@@ -80,7 +80,7 @@ namespace CircuitCalcToolGUI
 
         private void UpdateArr()
         {
-            for (int c = 0; c < width - 1; c++)
+            for (int c = 0; c < width - 2; c++)
             {
                 if(c < value.Length)
                     text[1] = ChangeChar(text[1], c + 1, value[c].ToString());

@@ -23,7 +23,7 @@ namespace CircuitCalcToolGUI
 
         static void CalculatorInit()
         {
-            gui = new GUI(new Position(47, 20), 1);
+            gui = new GUI(new Position(47, 11), 1);
 
             fields = new TextField[3];
             fields[0] = new TextField(new Position(2, 2), 15, "U");
@@ -62,14 +62,29 @@ namespace CircuitCalcToolGUI
         static void Calculate(object sender, EventArgs args)
         {
             Calculator calcualtor = new Calculator();
-            calcualtor.setU(Convert.ToDouble(fields[0].value));
-            calcualtor.setI(Convert.ToDouble(fields[1].value));
-            calcualtor.setRi(Convert.ToDouble(fields[2].value));
+            calcualtor.setU(ConvertToDouble(fields[0].value));
+            calcualtor.setI(ConvertToDouble(fields[1].value));
+            calcualtor.setRi(ConvertToDouble(fields[2].value));
 
             if(mode == 0)
                 gui.protectedTextFields[0].ChangeValue(Round(calcualtor.getResultICorr()).ToString());
             else
                 gui.protectedTextFields[0].ChangeValue(Round(calcualtor.getResultUCorr()).ToString());
+        }
+
+        static double ConvertToDouble(string value)
+        {
+            string s = "";
+            foreach(var item in value)
+            {
+                if (double.TryParse(item.ToString(), out double result))
+                    s += item;
+            }
+
+            if (s != "")
+                return Convert.ToDouble(s);
+            else 
+                return 0d;
         }
 
         static double Round(double value)

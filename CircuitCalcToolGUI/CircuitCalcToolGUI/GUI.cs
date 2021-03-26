@@ -346,6 +346,8 @@ namespace CircuitCalcToolGUI
                     case ConsoleKey.Enter:
                         if (tabPos[tabIndex].Item2[0] == 1)
                             buttons[tabPos[tabIndex].Item2[1]].Press();
+                        else
+                            TabToNext();
 
                         MoveCursor(cursorPos);
                         break;
