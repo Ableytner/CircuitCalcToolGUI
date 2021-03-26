@@ -213,7 +213,17 @@ namespace CircuitCalcToolGUI
             if (tabIndex >= tabPos.Count)
                 tabIndex = 0;
 
-            Position newPos = new Position(tabPos[tabIndex].Item1.x, tabPos[tabIndex].Item1.y);
+            int i = 0;
+            if (tabPos[tabIndex].Item2[0] == 0)
+            {
+                while (i < textFields[tabPos[tabIndex].Item2[1]].value.Length)
+                    if (textFields[tabPos[tabIndex].Item2[1]].value[i] != ' ')
+                        i++;
+                    else
+                        break;
+            }
+
+            Position newPos = new Position(tabPos[tabIndex].Item1.x + i, tabPos[tabIndex].Item1.y);
             MoveCursor(newPos);
         }
         private void TabToLast()
@@ -224,7 +234,17 @@ namespace CircuitCalcToolGUI
             if (tabIndex < 0)
                 tabIndex = tabPos.Count - 1;
 
-            Position newPos = new Position(tabPos[tabIndex].Item1.x, tabPos[tabIndex].Item1.y);
+            int i = 0;
+            if (tabPos[tabIndex].Item2[0] == 0)
+            {
+                while (i < textFields[tabPos[tabIndex].Item2[1]].value.Length)
+                    if (textFields[tabPos[tabIndex].Item2[1]].value[i] != ' ')
+                        i++;
+                    else
+                        break;
+            }
+
+            Position newPos = new Position(tabPos[tabIndex].Item1.x + i, tabPos[tabIndex].Item1.y);
             MoveCursor(newPos);
         }
         #endregion
@@ -324,12 +344,10 @@ namespace CircuitCalcToolGUI
                         break;
 
                     case ConsoleKey.Enter:
-                        MoveCursor(cursorPos);
-
                         if (tabPos[tabIndex].Item2[0] == 1)
                             buttons[tabPos[tabIndex].Item2[1]].Press();
 
-                        RedrawAll();
+                        MoveCursor(cursorPos);
                         break;
 
                     case ConsoleKey.UpArrow:

@@ -25,8 +25,7 @@ namespace CircuitCalcToolGUI
 
         public double getResult()
         {
-            return 1;
-            //throw new NotImplementedException();
+            return 1.234d;
         }
     }
 }

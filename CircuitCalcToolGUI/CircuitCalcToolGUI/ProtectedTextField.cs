@@ -60,8 +60,9 @@ namespace CircuitCalcToolGUI
 
         public bool ChangeValue(char toChange, int index)
         {
-            if (index < value.Length)
+            if (!(index < value.Length))
             {
+                value += " ";
                 value = ChangeChar(value, index, toChange.ToString());
                 UpdateArr();
 
@@ -72,10 +73,11 @@ namespace CircuitCalcToolGUI
         }
         public bool ChangeValue(string toChange)
         {
-            for (int c = 0; c < toChange.Length; c++)
+            value = toChange;
+            /*for (int c = 0; c < toChange.Length; c++)
             {
                 ChangeValue(toChange[c], c);
-            }
+            }*/
 
             UpdateArr();
             return true;
@@ -84,7 +86,7 @@ namespace CircuitCalcToolGUI
         private void UpdateArr()
         {
             int i = 0;
-            for (int c = 1; c < value.Length; c++)
+            for (int c = 0; c < value.Length; c++)
             {
                 text[1] = ChangeChar(text[1], c + 1, value[c].ToString());
                 i++;
@@ -93,8 +95,7 @@ namespace CircuitCalcToolGUI
 
         private string ChangeChar(string s, int index, string newChar)
         {
-            s = s.Remove(index, newChar.Length);
-            return s.Insert(index, newChar);
+            return s.Remove(index, 1).Insert(index, newChar);
         }
     }
 }
