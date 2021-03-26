@@ -74,22 +74,18 @@ namespace CircuitCalcToolGUI
         public bool ChangeValue(string toChange)
         {
             value = toChange;
-            /*for (int c = 0; c < toChange.Length; c++)
-            {
-                ChangeValue(toChange[c], c);
-            }*/
-
             UpdateArr();
             return true;
         }
 
         private void UpdateArr()
         {
-            int i = 0;
-            for (int c = 0; c < value.Length; c++)
+            for (int c = 0; c < width - 1; c++)
             {
-                text[1] = ChangeChar(text[1], c + 1, value[c].ToString());
-                i++;
+                if(c < value.Length)
+                    text[1] = ChangeChar(text[1], c + 1, value[c].ToString());
+                else
+                    text[1] = ChangeChar(text[1], c + 1, " ");
             }
         }
 

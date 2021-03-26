@@ -45,8 +45,6 @@ namespace CircuitCalcToolGUI
 
         private void Initialize()
         {
-            titlePos = 1;
-
             UpdateArr();
         }
 
@@ -54,7 +52,6 @@ namespace CircuitCalcToolGUI
         public readonly int width;
         public string[] text = new string[3];
         public string title;
-        public int titlePos;
 
         public event EventHandler Clicked;
         protected virtual void OnClicked(EventArgs e)
@@ -71,11 +68,21 @@ namespace CircuitCalcToolGUI
             OnClicked(EventArgs.Empty);
         }
 
+
+        public bool ChangeValue(string toChange)
+        {
+            title = toChange;
+            UpdateArr();
+            return true;
+        }
         private void UpdateArr()
         {
-            for (int c = 1; c < title.Length + 1; c++)
+            for (int c = 1; c < width; c++)
             {
-                text[1] = ChangeChar(text[1], c, title[c - 1].ToString());
+                if (c < title.Length + 1)
+                    text[1] = ChangeChar(text[1], c, title[c - 1].ToString());
+                else
+                    text[1] = ChangeChar(text[1], c, " ");
             }
         }
 

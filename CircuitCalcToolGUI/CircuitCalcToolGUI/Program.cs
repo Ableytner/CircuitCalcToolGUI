@@ -17,6 +17,8 @@ namespace CircuitCalcToolGUI
         private static GUI gui;
         private static TextField[] fields;
         private static Button calculateButton;
+        private static Button modeChangeButton;
+        private static int mode = 0;
         private static ProtectedTextField resultField;
 
         static void CalculatorInit()
@@ -30,14 +32,31 @@ namespace CircuitCalcToolGUI
 
             calculateButton = new Button(new Position(17, 5), 15, "Calculate");
             calculateButton.Clicked += Calculate;
+            modeChangeButton = new Button(new Position(32, 5), 15, "Current corr");
+            modeChangeButton.Clicked += ChangeMode;
             resultField = new ProtectedTextField(new Position(17, 8), 15);
 
             foreach (var item in fields)
                 gui.AddTextField(item);
             gui.AddButton(calculateButton);
+            gui.AddButton(modeChangeButton);
             gui.AddProtectedTextField(resultField);
 
             gui.Start();
+        }
+
+        static void ChangeMode(object sender, EventArgs args)
+        {
+            if (mode == 0)
+            {
+                modeChangeButton.ChangeValue("Volage corr");
+                mode = 1;
+            }
+            else
+            {
+                modeChangeButton.ChangeValue("Current corr");
+                mode = 0;
+            }
         }
 
         static void Calculate(object sender, EventArgs args)
@@ -46,7 +65,24 @@ namespace CircuitCalcToolGUI
             calcualtor.setU(Convert.ToDouble(fields[0].value));
             calcualtor.setI(Convert.ToDouble(fields[1].value));
             calcualtor.setRi(Convert.ToDouble(fields[2].value));
-            gui.protectedTextFields[0].ChangeValue(calcualtor.getResult().ToString());
+
+            if(mode == 0)
+                gui.protectedTextFields[0].ChangeValue(Round(calcualtor.getResultICorr()).ToString());
+            else
+                gui.protectedTextFields[0].ChangeValue(Round(calcualtor.getResultUCorr()).ToString());
+        }
+
+        static double Round(double value)
+        {
+            string rounded = "";
+
+            for(int c = 0; c < value.ToString().Length; c++)
+            {
+                if (c < resultField.width - 2)
+                    rounded += value.ToString()[c];
+            }
+
+            return Convert.ToDouble(rounded);
         }
 
         static void Testing()

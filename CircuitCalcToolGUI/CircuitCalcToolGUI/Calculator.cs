@@ -23,9 +23,20 @@ namespace CircuitCalcToolGUI
             this.Ri = Ri;
         }
 
-        public double getResult()
+        public double getResultUCorr()
         {
-            return 1.234d;
+            double Rges = U / I;
+            double R = Rges - Ri;
+            
+            return R;
+        }
+        public double getResultICorr()
+        {
+            double Ua = Ri * I;
+            double Ur = U - Ua;
+            double R = Ur / I;
+            
+            return R;
         }
     }
 }

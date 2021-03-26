@@ -161,7 +161,7 @@ namespace CircuitCalcToolGUI
             }
             for(int c = 0; c < buttons.Count; c++)
             {
-                tabPos.Add(new Tuple<Position, int[]>(new Position(buttons[c].pos.x + buttons[c].titlePos - 1, buttons[c].pos.y), new int[] { 1, c }));
+                tabPos.Add(new Tuple<Position, int[]>(new Position(buttons[c].pos.x, buttons[c].pos.y), new int[] { 1, c }));
             }
 
             SortTabPos();
