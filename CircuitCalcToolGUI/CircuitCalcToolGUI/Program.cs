@@ -77,8 +77,13 @@ namespace CircuitCalcToolGUI
             string s = "";
             foreach(var item in value)
             {
-                if (double.TryParse(item.ToString(), out double result))
-                    s += item;
+                if(item == '.' || item == ',')
+                    s += ',';
+                else
+                {
+                    if (double.TryParse(item.ToString(), out double result))
+                        s += item;
+                }
             }
 
             if (s != "")
